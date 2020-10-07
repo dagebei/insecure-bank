@@ -17,6 +17,10 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    env:
+      POLARIS_SERVER_URL:  https://sipse.polaris.synopsys.com/
+      POLARIS_ACCESS_TOKEN:  ${{ secrets.POLARIS_ACCESS_TOKEN }}
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -28,12 +32,11 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # Setup and Run Coverity on Polaris SAST
+      - name: Polaris setup
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          wget -q $POLARIS_SERVER_URL/api/tools/polaris_cli-linux64.zip
+          unzip -j polaris_cli-linux64.zip -d /tmp
+          /tmp/polaris install
+      - name: Polaris scan
+        run: /tmp/polaris analyze -w
