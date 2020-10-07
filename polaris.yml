@@ -1,0 +1,34 @@
+version: "1"
+project:
+  name: ALB-${scm.git.repo}
+  branch: ${scm.git.branch}
+  revision:
+    name: ${scm.git.commit}
+    date: ${scm.git.commit.date}
+capture:
+  build:
+    cleanCommands:
+    - shell: [mvn, clean]
+    buildCommands:
+    - shell: [mvn, 'dependency:purge-local-repository', package]
+  fileSystem:
+    ears:
+      extensions: [ear]
+      files:
+      - directory: ${project.projectDir}
+    javascript:
+      files:
+      - directory: ${project.projectDir}
+      - excludeRegex: node_modules|bower_components|vendor
+    wars:
+      extensions: [war]
+      files:
+      - directory: ${project.projectDir}
+analyze:
+  mode: central
+  coverity:
+    cov-analyze: ["--aggressiveness-level", "high", "--all", "--security", "--android-security", "--webapp-security", "--webapp-security-aggressiveness-level", "high", "--distrust-all", "--enable-audit-mode"]
+install:
+  coverity:
+    version: default
+serverUrl: https://sipse.polaris.synopsys.com
