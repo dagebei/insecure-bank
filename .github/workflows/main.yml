@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      POLARIS_SERVER_URL:  https://sipse.polaris.synopsys.com/
+      POLARIS_SERVER_URL:  ${{ secrets.POLARIS_SERVER_URL }}
       POLARIS_ACCESS_TOKEN:  ${{ secrets.POLARIS_ACCESS_TOKEN }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -40,3 +40,10 @@ jobs:
           /tmp/polaris install
       - name: Polaris scan
         run: /tmp/polaris analyze -w
+        
+      # Setup and Run Coverity on Polaris SAST
+      - name: Software Composition Analysis with Black Duck
+        uses: blackducksoftware/github-action@v2
+        with:
+          args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN}}" --detect.project.name="ALB-insecure-bank" --detect.project.version.name="1.0.1"'
+
