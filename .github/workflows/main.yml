@@ -41,7 +41,7 @@ jobs:
       - name: Polaris scan
         run: /tmp/polaris analyze -w
         
-      # Setup and Run Blackduck SCA
+      # Setup and Run Blackduck SCA 
       - name: Software Composition Analysis with Black Duck
         uses: blackducksoftware/github-action@v2
         with:
