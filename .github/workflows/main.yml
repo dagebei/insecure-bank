@@ -53,7 +53,7 @@ jobs:
       - name: Polaris scan
         run: /tmp/polaris analyze -w
         
-      # Setup and Run Blackduck SCA 
+      # Setup and Run Blackduck SCA
       #- name: Software Composition Analysis with Black Duck
       #  uses: blackducksoftware/github-action@v2
       #  with:
@@ -66,7 +66,7 @@ jobs:
           ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
           workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
           workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
-          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}}"
+          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --polaris.project.name=ALB-dagebei/insecure-bank --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}}"
           stage: "WORKFLOW"
 
       - name: Upload SARIF file
