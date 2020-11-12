@@ -32,16 +32,16 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-    - name: Synopsys Intelligent Security Scan
-      id: prescription
-      uses: synopsys-sig/intelligent-security-scan@v1
-      with:
-        ioServerUrl: ${{secrets.IO_SERVER_URL}}
-        ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
-        workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
-        workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
-        additionalWorkflowArgs: "--persona=developer"
-        stage: "IO"
+      - name: Synopsys Intelligent Security Scan
+        id: prescription
+        uses: synopsys-sig/intelligent-security-scan@v1
+        with:
+          ioServerUrl: ${{secrets.IO_SERVER_URL}}
+          ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
+          workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
+          workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
+          additionalWorkflowArgs: "--persona=developer"
+          stage: "IO"
 
       # Setup and Run Coverity on Polaris SAST
       - name: Polaris setup
