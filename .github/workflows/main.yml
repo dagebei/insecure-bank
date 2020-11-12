@@ -32,8 +32,20 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+    - name: Synopsys Intelligent Security Scan
+      id: prescription
+      uses: synopsys-sig/intelligent-security-scan@v1
+      with:
+        ioServerUrl: ${{secrets.IO_SERVER_URL}}
+        ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
+        workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
+        workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
+        additionalWorkflowArgs: "--persona=developer"
+        stage: "IO"
+
       # Setup and Run Coverity on Polaris SAST
       - name: Polaris setup
+        if: ${{steps.prescription.outputs.sastScan == 'true' }}
         run: |
           wget -q $POLARIS_SERVER_URL/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp
@@ -42,8 +54,23 @@ jobs:
         run: /tmp/polaris analyze -w
         
       # Setup and Run Blackduck SCA
-      - name: Software Composition Analysis with Black Duck
-        uses: blackducksoftware/github-action@v2
-        with:
-          args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN}}" --detect.tools="SIGNATURE_SCAN,DETECTOR" --detect.project.name="ALB-insecure-bank" --detect.project.version.name="1.0.1"'
+      #- name: Software Composition Analysis with Black Duck
+      #  uses: blackducksoftware/github-action@v2
+      #  with:
+      #    args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN}}" --detect.tools="SIGNATURE_SCAN,DETECTOR" --detect.project.name="ALB-insecure-bank" --detect.project.version.name="1.0.1"'
 
+      - name: Synopsys Intelligent Security Scan
+        uses: synopsys-sig/intelligent-security-scan@v1
+        with:
+          ioServerUrl: ${{secrets.IO_SERVER_URL}}
+          ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
+          workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
+          workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
+          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}}"
+          stage: "WORKFLOW"
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: workflowengine-results.sarif.json
