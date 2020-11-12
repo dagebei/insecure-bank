@@ -1,6 +1,6 @@
 application:
-  appId: insecure-bank
-  assetId: insecure-bank
+  appId: SIGappIOtest1
+  assetId: SIGappIOtest1
   sdlcType: EDM
   appType: Webapp
   webservice: true
@@ -10,18 +10,22 @@ application:
   platformVersion: Java 8
   buildSystem: Maven
   riskMatrixRevision: Rev1.0
-  sourceFilePattern: .*\\+\\+\\+.*(\\.java|\\.jsp)+.*
-  sensitivePackagePattern: .*(\\+\\+\\+.*(com\\/synopsys\\/app)).*
+  sourceFilePattern: .*\+\+\+.*(\.java|\.jsp)+.*
+  sensitivePackagePattern: .*(\+\+\+.*(com\/synopsys\/app)).*
   fileChangeThreshold: 20
   release: major
 environment:
-  scm: external
-  codePatch: ""
-  scmOwner: rahulguna10
+  scm: github
+  scmOwner: dagebei
   scmRepositoryName: insecure-bank
   scmBranchName: master
-  jiraProjectName: ""
-  jiraIssuesQuery: ""
-  jiraApiUrl: ""
-  jiraUserName: ""
-  jiraAuthToken: ""
+  githubApiUrl: https://api.github.com/repos/
+  bitbucketUserName: <<BITBUCKET_USERNAME>>
+  bitbucketPassword: <<BITBUCKET_PASSWORD>>
+  bitbucketApiUrl: https://api.bitbucket.org/2.0/repositories/
+  jiraProjectName: <<JIRA_PROJECT_NAME>>
+  jiraIssuesQuery: <<JIRA_ISSUES_QUERY>>
+  jiraApiUrl: <<JIRA_API_URL>>
+  jiraUserName: <<JIRA_USERNAME>>
+  jiraAuthToken: <<JIRA_AUTH_TOKEN>>
+
