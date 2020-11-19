@@ -76,4 +76,10 @@ jobs:
           sarif_file: workflowengine-results.sarif.json
           
       - name: Final Debug
-        run: cat workflowengine-results.sarif.json
+        run: |
+          echo "workflowengine-results.sarif.json"
+          cat workflowengine-results.sarif.json
+          echo "SecurityManifest.yml"
+          cat SecurityManifest.yml
+          echo "WorkflowTemplate.yml"
+          cat WorkflowTemplate.yml
