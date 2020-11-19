@@ -54,10 +54,11 @@ jobs:
         run: /tmp/polaris analyze -w
         
       # Setup and Run Blackduck SCA
-      #- name: Software Composition Analysis with Black Duck
-      #  uses: blackducksoftware/github-action@v2
-      #  with:
-      #    args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN}}" --detect.tools="SIGNATURE_SCAN,DETECTOR" --detect.project.name="ALB-insecure-bank" --detect.project.version.name="1.0.1"'
+      - name: Software Composition Analysis with Black Duck
+        if: ${{steps.prescription.outputs.scaScan == 'true' }}
+        uses: blackducksoftware/github-action@v2
+        with:
+          args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN}}" --detect.tools="SIGNATURE_SCAN,DETECTOR" --detect.project.name="ALB-insecure-bank" --detect.project.version.name="1.0.1"'
 
       - name: Synopsys Intelligent Security Scan
         uses: synopsys-sig/intelligent-security-scan@v1
@@ -66,7 +67,7 @@ jobs:
           ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
           workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
           workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
-          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --polaris.project.name=ALB-dagebei/insecure-bank --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}}"
+          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --IS_SCA_ENABLED=${{steps.prescription.outputs.scaScan}} --polaris.project.name=ALB-dagebei/insecure-bank --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}} --blackduck.project.name=ALB-insecure-bank:1.0.1 --blackduck.url=${{secrets.BLACKDUCK_URL}} --blackduck.api.token=${{secrets.BLACKDUCK_TOKEN}}" 
           stage: "WORKFLOW"
 
       - name: Upload SARIF file
