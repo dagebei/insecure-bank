@@ -77,7 +77,7 @@ jobs:
           
       - name: Final Debug
         run: |
-          echo "workflowengine-results.sarif.json"
+          echo "--workflowengine-results.sarif.json--"
           cat workflowengine-results.sarif.json
           echo "SecurityManifest.yml"
           cat SecurityManifest.yml
