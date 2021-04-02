@@ -39,10 +39,11 @@ jobs:
           ioServerUrl: ${{secrets.IO_SERVER_URL}}
           ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
           workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
-          workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
-          additionalWorkflowArgs: "--persona=developer"
+          additionalWorkflowArgs: --persona=developer --release.type=major --sast.rescan.threshold=5  --sca.rescan.threshold=5
+                  --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}} 
+                  --sensitive.package.pattern='.*(\\+\\+\\+.*(com\\/example\\/app)).*'
           stage: "IO"
-
+        
       # Setup and Run Coverity on Polaris SAST
       - name: SAST with Coverity on Polaris
         if: ${{steps.prescription.outputs.sastScan == 'true' }}
@@ -60,15 +61,15 @@ jobs:
           args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_TOKEN}}" --detect.tools="SIGNATURE_SCAN,DETECTOR" --detect.project.name="ALB-insecure-bank" --detect.project.version.name="1.0.1"'
 
       - name: Synopsys Intelligent Security Scan
+        if: ${{ steps.prescription.outputs.sastScan == 'true' || steps.prescription.outputs.scaScan == 'true' }}
         uses: synopsys-sig/intelligent-security-scan@v1
         with:
           ioServerUrl: ${{secrets.IO_SERVER_URL}}
           ioServerToken: ${{secrets.IO_SERVER_TOKEN}}
           workflowServerUrl: ${{secrets.WORKFLOW_SERVER_URL}}
-          workflowServerToken: ${{secrets.WORKFLOW_SERVER_TOKEN}}
-          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --IS_SCA_ENABLED=${{steps.prescription.outputs.scaScan}} --polaris.project.name=ALB-dagebei/insecure-bank --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}} --blackduck.project.name=ALB-insecure-bank:1.0.1 --blackduck.url=${{secrets.BLACKDUCK_URL}} --blackduck.api.token=${{secrets.BLACKDUCK_TOKEN}}" 
+          additionalWorkflowArgs: "--IS_SAST_ENABLED=${{steps.prescription.outputs.sastScan}} --IS_SCA_ENABLED=${{steps.prescription.outputs.scaScan}} --polaris.project.name=ALB-dagebei/insecure-bank --polaris.url=${{secrets.POLARIS_URL}} --polaris.token=${{secrets.POLARIS_TOKEN}} --blackduck.project.name=ALB-insecure-bank:1.0.1 --blackduck.url=${{secrets.BLACKDUCK_URL}} --blackduck.api.token=${{secrets.BLACKDUCK_TOKEN}}"
           stage: "WORKFLOW"
-
+        
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
@@ -83,3 +84,5 @@ jobs:
           cat SecurityManifest.yml
           echo "WorkflowTemplate.yml"
           cat WorkflowTemplate.yml
+          echo "prescription.sh"
+          cat prescription.sh
