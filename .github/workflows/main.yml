@@ -78,9 +78,11 @@ jobs:
           
       - name: Final Debug
         run: |
-          echo "workflowengine-results.sarif.json"
+          echo "=====io-manifest.yml====="
+          cat io-manifest.yml
+          echo "=====synopsys-io.yml====="
+          cat synopsys-io.yml
+          echo "=====prescription.sh====="
+          cat prescription.sh
+          echo "=====workflowengine-results.sarif.json====="
           cat workflowengine-results.sarif.json
-          ls *.yml
-          cat *.yml
-          ls *.sh
-          cat *.sh
