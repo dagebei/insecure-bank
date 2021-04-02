@@ -80,9 +80,7 @@ jobs:
         run: |
           echo "workflowengine-results.sarif.json"
           cat workflowengine-results.sarif.json
-          echo "SecurityManifest.yml"
-          cat SecurityManifest.yml
-          echo "WorkflowTemplate.yml"
-          cat WorkflowTemplate.yml
-          echo "prescription.sh"
-          cat prescription.sh
+          ls *.yml
+          cat *.yml
+          ls *.sh
+          cat *.sh
