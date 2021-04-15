@@ -78,7 +78,7 @@ jobs:
           
       - name: Final Debug
         run: |
-          echo "=====io-manifest.yml====="
+          echo "=====io-manifest.yml======"
           cat io-manifest.yml
           echo "=====synopsys-io.yml====="
           cat synopsys-io.yml
