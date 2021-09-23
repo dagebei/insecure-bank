@@ -18,10 +18,10 @@ environment:
   githubApiUrl: https://api.github.com/repos
   githubUsername: <<GITHUB_USERNAME>>
   githubToken: <<GITHUB_TOKEN>>
-  enableJira: true
-  jiraProjectName: IODEMO
-  jiraIssuesQuery: project=IODEMO
-  testDeploymentRoot: /
+#  enableJira: true
+#  jiraProjectName: IODEMO
+#  jiraIssuesQuery: project=IODEMO
+#  testDeploymentRoot: /
 
 security:
   pipeline:
