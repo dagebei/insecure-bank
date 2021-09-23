@@ -35,7 +35,7 @@ security:
 #      projectkey: IODEMO
 
 codedx:
-  instance_url: https://poc09.codedx.synopsys.com/codedx
+  instance_url: http://52.186.143.163:18080/codedx
   api_key: <<CODEDX_API_KEY>>
   project_id: 3
 
