@@ -19,8 +19,7 @@ pipeline {
     }
     stage('SAST - Coverity') {
       steps {
-        echo "add Polaris parts here"
-        echo "${POLARIS_SERVER_URL}"
+        echo "Running Coverity on Polaris"
         sh '''
           rm -fr /tmp/polaris
           wget -q ${POLARIS_SERVER_URL}/api/tools/polaris_cli-linux64.zip
