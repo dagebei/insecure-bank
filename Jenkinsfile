@@ -21,7 +21,7 @@ pipeline {
         echo "add Polaris parts here"
         echo "${POLARIS_SERVER_URL}"
         sh '''
-          wget -q ${POLARIS_SERVER_URL}/api/tools/polaris_cli-linux64.zip'
+          wget -q ${POLARIS_SERVER_URL}/api/tools/polaris_cli-linux64.zip
           unzip -j polaris_cli-linux64.zip -d /tmp
           /tmp/polaris --persist-config --co project.name="IO-POC-insecure-bank" --co capture.build.buildCommands="null" --co capture.build.cleanCommands="null" --co capture.fileSystem="null" --co capture.coverity.autoCapture="enable"  configure
           /tmp/polaris analyze -w
