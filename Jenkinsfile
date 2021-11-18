@@ -5,9 +5,9 @@ pipeline {
     PROJECT = 'insecure-bank'
   }
 
-  tools {
-    jdk 'openjdk-11'
-  }
+//  tools {
+//    jdk 'openjdk-11'
+//  }
 
   stages {
     stage('clean') {
