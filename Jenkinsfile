@@ -19,19 +19,20 @@ pipeline {
     stage('SAST - Coverity') {
       steps {
         echo "add Polaris parts here"
-        echo $POLARIS_SERVER_URL
+        echo ${POLARIS_SERVER_URL}
       }
     }
     stage('SCA - Blackduck') {
       steps {
         echo "add Blackduck parts here"
-        echo $BLACKDUCK_URL
+        echo ${BLACKDUCK_URL}
       }
     }
     stage('CodeDx') {
       steps {
         echo "add CodeDx parts here"
-        echo $CODEDX_SERVER_URL      }
+        echo ${CODEDX_SERVER_URL}
+      }
     }
     stage('Clean Workspace') {
       steps {
