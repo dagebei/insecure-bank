@@ -1,3 +1,21 @@
-@Library('intelligent-orchestration')
-    import com.synopsys.*
-    new com.demo.pipeline.EntryPoint().execute('io-manifest.yml')
+pipeline {
+	agent any
+
+	environment {
+		PROJECT = 'insecure-bank'
+	}
+
+	tools {
+		jdk 'openjdk-11'
+	}
+
+	stages {
+        stage('clean') {
+            cleanWs()
+        }
+		stage('Build') {
+			steps {
+				sh 'mvn -B compile'
+			}
+		}
+    }
