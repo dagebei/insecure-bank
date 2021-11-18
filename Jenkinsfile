@@ -11,7 +11,9 @@ pipeline {
 
   stages {
     stage('clean') {
-      cleanWs()
+      steps {
+        cleanWs()
+      }
     }
     stage('Build') {
       steps {
