@@ -3,6 +3,7 @@ pipeline {
 
   environment {
     PROJECT = 'insecure-bank'
+    POLARIS_ACCESS_TOKEN = credentials('polaris-token')
   }
 
   stages {
