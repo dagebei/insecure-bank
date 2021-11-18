@@ -10,11 +10,11 @@ pipeline {
 //  }
 
   stages {
-    stage('clean') {
-      steps {
-        cleanWs()
-      }
-    }
+//    stage('clean') {
+//      steps {
+//        cleanWs()
+//      }
+//    }
     stage('Build') {
       steps {
         sh 'mvn -e clean package -DskipTests'
