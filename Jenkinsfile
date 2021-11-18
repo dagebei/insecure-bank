@@ -17,7 +17,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'mvn -e -Dmaven.repo.local=../.m2 clean package dependency:copy-dependencies -DskipTests'
+        sh 'mvn -e clean package -DskipTests'
       }
     }
   }
