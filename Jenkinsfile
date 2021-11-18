@@ -4,6 +4,7 @@ pipeline {
   environment {
     PROJECT = 'insecure-bank'
     POLARIS_ACCESS_TOKEN = credentials('polaris-token')
+    BLACKDUCK_ACCESS_TOKEN = credentials('BlackDuck-AuthToken')
   }
 
   stages {
@@ -31,8 +32,12 @@ pipeline {
     }
     stage('SCA - Blackduck') {
       steps {
-        echo "add Blackduck parts here"
-        echo "${BLACKDUCK_URL}"
+        echo "Running Blackduck"
+        sh '''
+          rm -fr /tmp/detect7.sh
+          curl -s -L https://detect.synopsys.com/detect7.sh > /tmp/detect7.sh
+          bash /tmp/detect7.sh --blackduck.url="${BLACKDUCK_URL}" --blackduck.api.token="${BLACKDUCK_ACCESS_TOKEN}" --detect.project.name="IO-POC-insecure-bank" --detect.project.version.name=1.0 --blackduck.trust.cert=true
+        '''
       }
     }
     stage('CodeDx') {
