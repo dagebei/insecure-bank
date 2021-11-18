@@ -19,17 +19,19 @@ pipeline {
     stage('SAST - Coverity') {
       steps {
         echo "add Polaris parts here"
+        echo script.env.POLARIS_SERVER_URL
       }
     }
     stage('SCA - Blackduck') {
       steps {
         echo "add Blackduck parts here"
+        echo script.env.BLACKDUCK_URL
       }
     }
     stage('CodeDx') {
       steps {
         echo "add CodeDx parts here"
-      }
+        echo script.env.CODEDX_SERVER_URL      }
     }
     stage('Clean Workspace') {
       steps {
