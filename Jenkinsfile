@@ -11,6 +11,16 @@ pipeline {
         sh 'mvn -e clean package -DskipTests'
       }
     }
+    stage('SAST - Coverity') {
+      steps {
+        echo "add Polaris parts here"
+      }
+    }
+    stage('SCA - Blackduck') {
+      steps {
+        echo "add Blackduck parts here"
+      }
+    }
     stage('Clean Workspace') {
       steps {
         cleanWs()
