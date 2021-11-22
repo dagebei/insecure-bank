@@ -91,6 +91,7 @@ pipeline {
     stage('SAST - Coverity') {
       steps {
         echo "Running Coverity on Polaris"
+        echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
         /*
         sh '''
           rm -fr /tmp/polaris
@@ -105,6 +106,7 @@ pipeline {
     stage('SCA - Blackduck') {
       steps {
         echo "Running Blackduck"
+        echo "IS_SCA_ENABLED = ${IS_SCA_ENABLED}"
         /*
         sh '''
           rm -fr /tmp/detect7.sh
