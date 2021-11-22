@@ -95,8 +95,7 @@ pipeline {
           echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
           IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
           echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
-          if [${IS_SAST_ENABLED} == "true"]
-          then
+          if [ $IS_SAST_ENABLED == "true" ]; then
             echo "Running Coverity on Polaris based on IO Precription"
           else
             echo "Skipping Coverity on Polaris based on IO Precription"
