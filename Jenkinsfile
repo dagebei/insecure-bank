@@ -77,6 +77,7 @@ pipeline {
           echo -n "Total Score - " >> io-risk-score.txt && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
         '''
         sh 'cat io-risk-score.txt'
+        /*
         sh '''
           IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
           IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
@@ -85,6 +86,7 @@ pipeline {
           IS_CODE_REVIEW_ENABLED=$(jq -r '.security.activities.sastplusm.enabled' result.json)
           IS_PEN_TESTING_ENABLED=$(jq -r '.security.activities.dastplusm.enabled' result.json)
         '''
+        */
       }
     }
     stage('SAST - Coverity') {
