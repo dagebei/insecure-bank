@@ -123,6 +123,7 @@ pipeline {
           else
             echo "Skipping Blackduck based on IO Precription"
           fi
+          '''
       }
     }
     stage('CodeDx') {
