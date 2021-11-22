@@ -9,7 +9,12 @@ pipeline {
     IO_ACCESS_TOKEN = credentials('IO-AUTH-TOKEN')
     GTIHUB_ACCESS_TOKEN = credentials('Github-AuthToken')
     CODEDX_ACCESS_TOKEN = credentials('CODEDX_API_KEY')
-  }
+    IS_SAST_ENABLED = "false"
+    IS_SCA_ENABLED = "false"
+    IS_DAST_ENABLED = "false"
+    IS_IMAGE_SCAN_ENABLED = "false"
+    IS_CODE_REVIEW_ENABLED = "false"
+    IS_PEN_TESTING_ENABLED = "false"
 
   stages {
     stage('Build') {
@@ -53,30 +58,39 @@ pipeline {
           --codedx.url="${CODEDX_SERVER_URL}" \
           --codedx.api.key="${CODEDX_ACCESS_TOKEN}" \
           --codedx.project.id="5" \
-          --IS_SAST_ENABLED="false" \
-          --IS_SCA_ENABLED="false" \
-          --IS_DAST_ENABLED="false"
+          --IS_SAST_ENABLED="${IS_SAST_ENABLED}" \
+          --IS_SCA_ENABLED="${IS_SCA_ENABLED}" \
+          --IS_DAST_ENABLED="${IS_DAST_ENABLED}"
         '''
         sh '''
-            echo "==================================== IO Risk Score =======================================" > io-risk-score.txt
-            echo "Business Criticality Score - $(jq -r '.riskScoreCard.bizCriticalityScore' result.json)" >> io-risk-score.txt
-            echo "Data Class Score - $(jq -r '.riskScoreCard.dataClassScore' result.json)" >> io-risk-score.txt
-            echo "Access Score - $(jq -r '.riskScoreCard.accessScore' result.json)" >> io-risk-score.txt
-            echo "Open Vulnerability Score - $(jq -r '.riskScoreCard.openVulnScore' result.json)" >> io-risk-score.txt
-            echo "Change Significance Score - $(jq -r '.riskScoreCard.changeSignificanceScore' result.json)" >> io-risk-score.txt
-            export bizScore=$(jq -r '.riskScoreCard.bizCriticalityScore' result.json | cut -d'/' -f2) 
-            export dataScore=$(jq -r '.riskScoreCard.dataClassScore' result.json | cut -d'/' -f2)
-            export accessScore=$(jq -r '.riskScoreCard.accessScore' result.json | cut -d'/' -f2)
-            export vulnScore=$(jq -r '.riskScoreCard.openVulnScore' result.json | cut -d'/' -f2)
-            export changeScore=$(jq -r '.riskScoreCard.changeSignificanceScore' result.json | cut -d'/' -f2)
-            echo -n "Total Score - " >> io-risk-score.txt && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
+          echo "==================================== IO Risk Score =======================================" > io-risk-score.txt
+          echo "Business Criticality Score - $(jq -r '.riskScoreCard.bizCriticalityScore' result.json)" >> io-risk-score.txt
+          echo "Data Class Score - $(jq -r '.riskScoreCard.dataClassScore' result.json)" >> io-risk-score.txt
+          echo "Access Score - $(jq -r '.riskScoreCard.accessScore' result.json)" >> io-risk-score.txt
+          echo "Open Vulnerability Score - $(jq -r '.riskScoreCard.openVulnScore' result.json)" >> io-risk-score.txt
+          echo "Change Significance Score - $(jq -r '.riskScoreCard.changeSignificanceScore' result.json)" >> io-risk-score.txt
+          export bizScore=$(jq -r '.riskScoreCard.bizCriticalityScore' result.json | cut -d'/' -f2) 
+          export dataScore=$(jq -r '.riskScoreCard.dataClassScore' result.json | cut -d'/' -f2)
+          export accessScore=$(jq -r '.riskScoreCard.accessScore' result.json | cut -d'/' -f2)
+          export vulnScore=$(jq -r '.riskScoreCard.openVulnScore' result.json | cut -d'/' -f2)
+          export changeScore=$(jq -r '.riskScoreCard.changeSignificanceScore' result.json | cut -d'/' -f2)
+          echo -n "Total Score - " >> io-risk-score.txt && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
         '''
         sh 'cat io-risk-score.txt'
+        sh '''
+          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
+          IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
+          IS_DAST_ENABLED=$(jq -r '.security.activities.dast.enabled' result.json)
+          IS_IMAGE_SCAN_ENABLED=$(jq -r '.security.activities.imageScan.enabled' result.json)
+          IS_CODE_REVIEW_ENABLED=$(jq -r '.security.activities.sastplusm.enabled' result.json)
+          IS_PEN_TESTING_ENABLED=$(jq -r '.security.activities.dastplusm.enabled' result.json)
+        '''
       }
     }
     stage('SAST - Coverity') {
       steps {
         echo "Running Coverity on Polaris"
+        echo "IS_SAST_ENABLED = $IS_SAST_ENABLED"
         /*
         sh '''
           rm -fr /tmp/polaris
@@ -91,6 +105,7 @@ pipeline {
     stage('SCA - Blackduck') {
       steps {
         echo "Running Blackduck"
+        echo "IS_SCA_ENABLED = $IS_SCA_ENABLED"
         /*
         sh '''
           rm -fr /tmp/detect7.sh
