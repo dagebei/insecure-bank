@@ -23,6 +23,8 @@ pipeline {
         sh '''
           rm -fr prescription.sh
           wget "https://raw.githubusercontent.com/synopsys-sig/io-artifacts/${WORKFLOW_CLIENT_VERSION}/prescription.sh"
+          sed -i -e 's/\r$//' prescription.sh
+          chmod a+x prescription.sh
           ./prescription.sh \
           --stage="IO" \
           --persona="devsecops" \
