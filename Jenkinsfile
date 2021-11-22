@@ -69,7 +69,7 @@ pipeline {
             export accessScore=$(jq -r '.riskScoreCard.accessScore' result.json | cut -d'/' -f2)
             export vulnScore=$(jq -r '.riskScoreCard.openVulnScore' result.json | cut -d'/' -f2)
             export changeScore=$(jq -r '.riskScoreCard.changeSignificanceScore' result.json | cut -d'/' -f2)
-            echo -n "Total Score - " && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
+            echo -n "Total Score - " >> io-risk-score.txt && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
         '''
         sh 'cat io-risk-score.txt'
       }
