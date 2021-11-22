@@ -58,9 +58,9 @@ pipeline {
           --codedx.url="${CODEDX_SERVER_URL}" \
           --codedx.api.key="${CODEDX_ACCESS_TOKEN}" \
           --codedx.project.id="5" \
-          --IS_SAST_ENABLED="${IS_SAST_ENABLED}" \
-          --IS_SCA_ENABLED="${IS_SCA_ENABLED}" \
-          --IS_DAST_ENABLED="${IS_DAST_ENABLED}"
+          --IS_SAST_ENABLED="false" \
+          --IS_SCA_ENABLED="false" \
+          --IS_DAST_ENABLED="false"
         '''
         sh '''
           echo "==================================== IO Risk Score =======================================" > io-risk-score.txt
@@ -77,16 +77,6 @@ pipeline {
           echo -n "Total Score - " >> io-risk-score.txt && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
         '''
         sh 'cat io-risk-score.txt'
-        /*
-        sh '''
-          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
-          IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
-          IS_DAST_ENABLED=$(jq -r '.security.activities.dast.enabled' result.json)
-          IS_IMAGE_SCAN_ENABLED=$(jq -r '.security.activities.imageScan.enabled' result.json)
-          IS_CODE_REVIEW_ENABLED=$(jq -r '.security.activities.sastplusm.enabled' result.json)
-          IS_PEN_TESTING_ENABLED=$(jq -r '.security.activities.dastplusm.enabled' result.json)
-        '''
-        */
       }
     }
     stage('SAST - Coverity') {
