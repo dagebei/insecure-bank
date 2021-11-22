@@ -15,6 +15,7 @@ pipeline {
     IS_IMAGE_SCAN_ENABLED = "false"
     IS_CODE_REVIEW_ENABLED = "false"
     IS_PEN_TESTING_ENABLED = "false"
+  }
 
   stages {
     stage('Build') {
