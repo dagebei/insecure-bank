@@ -59,9 +59,9 @@ pipeline {
           --codedx.url="${CODEDX_SERVER_URL}" \
           --codedx.api.key="${CODEDX_ACCESS_TOKEN}" \
           --codedx.project.id="5" \
-          --IS_SAST_ENABLED="false" \
-          --IS_SCA_ENABLED="false" \
-          --IS_DAST_ENABLED="false"
+          --IS_SAST_ENABLED="${IS_SAST_ENABLED}" \
+          --IS_SCA_ENABLED="${IS_SCA_ENABLED}" \
+          --IS_DAST_ENABLED="${IS_DAST_ENABLED}"
         '''
         sh '''
           echo "==================================== IO Risk Score =======================================" > io-risk-score.txt
