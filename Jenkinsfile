@@ -19,7 +19,7 @@ pipeline {
     }
     stage('IO Prescription') {
       steps {
-        echo "add IO Prescription parts here"
+        echo "Getting IO Prescription"
         sh '''
           rm -fr prescription.sh
           wget "https://raw.githubusercontent.com/synopsys-sig/io-artifacts/${WORKFLOW_CLIENT_VERSION}/prescription.sh"
@@ -56,6 +56,20 @@ pipeline {
           --IS_SAST_ENABLED="false" \
           --IS_SCA_ENABLED="false" \
           --IS_DAST_ENABLED="false"
+        '''
+        sh '''
+            echo "==================================== IO Risk Score ======================================="
+            echo "Business Criticality Score - $(jq -r '.riskScoreCard.bizCriticalityScore' result.json)"
+            echo "Data Class Score - $(jq -r '.riskScoreCard.dataClassScore' result.json)"
+            echo "Access Score - $(jq -r '.riskScoreCard.accessScore' result.json)"
+            echo "Open Vulnerability Score - $(jq -r '.riskScoreCard.openVulnScore' result.json)"
+            echo "Change Significance Score - $(jq -r '.riskScoreCard.changeSignificanceScore' result.json)"
+            export bizScore=$(jq -r '.riskScoreCard.bizCriticalityScore' result.json | cut -d'/' -f2)
+            export dataScore=$(jq -r '.riskScoreCard.dataClassScore' result.json | cut -d'/' -f2)
+            export accessScore=$(jq -r '.riskScoreCard.accessScore' result.json | cut -d'/' -f2)
+            export vulnScore=$(jq -r '.riskScoreCard.openVulnScore' result.json | cut -d'/' -f2)
+            export changeScore=$(jq -r '.riskScoreCard.changeSignificanceScore' result.json | cut -d'/' -f2)
+            echo -n "Total Score - " && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc
         '''
       }
     }
