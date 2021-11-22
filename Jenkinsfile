@@ -79,8 +79,8 @@ pipeline {
         '''
         sh 'cat io-risk-score.txt'
         sh '''
-          export IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
-          export IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
+          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
+          IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
           IS_DAST_ENABLED=$(jq -r '.security.activities.dast.enabled' result.json)
           IS_IMAGE_SCAN_ENABLED=$(jq -r '.security.activities.imageScan.enabled' result.json)
           IS_CODE_REVIEW_ENABLED=$(jq -r '.security.activities.sastplusm.enabled' result.json)
@@ -91,8 +91,11 @@ pipeline {
     stage('SAST - Coverity') {
       steps {
         echo "Running Coverity on Polaris"
-        echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
-        echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore"
+        sh '''
+          echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
+          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
+          echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
+        '''
         /*
         sh '''
           rm -fr /tmp/polaris
