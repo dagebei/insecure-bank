@@ -37,10 +37,10 @@
             "rescanThreshold": "<<SCA_RESCAN_THRESHOLD>>"
          },
          "sastplusm": {
-            "rescanThreshold": "30"
+            "rescanThreshold": 30
          },
          "dastplusm": {
-            "rescanThreshold": "30"
+            "rescanThreshold": 30
          }
       }
    },
