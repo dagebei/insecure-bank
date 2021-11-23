@@ -94,7 +94,7 @@ pipeline {
       steps {
         echo "Stage - Coverity on Polaris"
         sh '''
-          #IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' io-presciption.json)
+          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' io-presciption.json)
           echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
           if [ ${IS_SAST_ENABLED} = "true" ]; then
             echo "Running Coverity on Polaris based on IO Precription"
@@ -113,7 +113,7 @@ pipeline {
       steps {
         echo "Stage - Blackduck"
         sh '''
-          #IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' io-presciption.json)
+          IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' io-presciption.json)
           echo "IS_SCA_ENABLED = ${IS_SCA_ENABLED}"
           if [ ${IS_SCA_ENABLED} = "true" ]; then
             echo "Running Blackduck based on IO Precription"
