@@ -158,7 +158,9 @@ pipeline {
           --IS_DAST_ENABLED="${IS_DAST_ENABLED}"
         '''
         echo "Running IO Workflow Engine with CodeDx"
-        sh 'java -jar WorkflowClient.jar --workflowengine.url="http://52.186.143.163/api/workflowengine/" --io.manifest.path=synopsys-io.json'
+        sh '''
+          java -jar WorkflowClient.jar --workflowengine.url="http://52.186.143.163/api/workflowengine/" --io.manifest.path=synopsys-io.json
+        '''
       }
     }
     stage('Schedule Manual Activities') {
@@ -169,7 +171,9 @@ pipeline {
     stage('Break the Build') {
       steps {
         echo "add Build Breaker parts here"
-        sh 'echo "Breaker Status - $(jq -r '.breaker.status' wf-output.json)"'
+        sh '''
+          echo "Breaker Status - $(jq -r '.breaker.status' wf-output.json)"
+        '''
       }
     }
     stage('Clean Workspace') {
