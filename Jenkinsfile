@@ -127,7 +127,7 @@ pipeline {
     }
     stage('IO Workflow - CodeDx') {
       steps {
-        echo "Determining post-scan actions..."
+        echo "Preparing to run IO Workflow Engine"
         sh '''
           IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
           IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
@@ -157,7 +157,7 @@ pipeline {
           --IS_SCA_ENABLED="${IS_SCA_ENABLED}" \
           --IS_DAST_ENABLED="${IS_DAST_ENABLED}"
         '''
-        echo "Running IO Workflow with CodeDx"
+        echo "Running IO Workflow Engine with CodeDx"
         sh 'java -jar WorkflowClient.jar --workflowengine.url="http://52.186.143.163/api/workflowengine/" --io.manifest.path=synopsys-io.json'
       }
     }
