@@ -63,28 +63,29 @@ pipeline {
           --IS_SCA_ENABLED="${IS_SCA_ENABLED}" \
           --IS_DAST_ENABLED="${IS_DAST_ENABLED}"
         '''
+        sh 'mv result.json io-presciption.json'
         sh '''
           echo "==================================== IO Risk Score =======================================" > io-risk-score.txt
-          echo "Business Criticality Score - $(jq -r '.riskScoreCard.bizCriticalityScore' result.json)" >> io-risk-score.txt
-          echo "Data Class Score - $(jq -r '.riskScoreCard.dataClassScore' result.json)" >> io-risk-score.txt
-          echo "Access Score - $(jq -r '.riskScoreCard.accessScore' result.json)" >> io-risk-score.txt
-          echo "Open Vulnerability Score - $(jq -r '.riskScoreCard.openVulnScore' result.json)" >> io-risk-score.txt
-          echo "Change Significance Score - $(jq -r '.riskScoreCard.changeSignificanceScore' result.json)" >> io-risk-score.txt
-          export bizScore=$(jq -r '.riskScoreCard.bizCriticalityScore' result.json | cut -d'/' -f2) 
-          export dataScore=$(jq -r '.riskScoreCard.dataClassScore' result.json | cut -d'/' -f2)
-          export accessScore=$(jq -r '.riskScoreCard.accessScore' result.json | cut -d'/' -f2)
-          export vulnScore=$(jq -r '.riskScoreCard.openVulnScore' result.json | cut -d'/' -f2)
-          export changeScore=$(jq -r '.riskScoreCard.changeSignificanceScore' result.json | cut -d'/' -f2)
+          echo "Business Criticality Score - $(jq -r '.riskScoreCard.bizCriticalityScore' io-presciption.json)" >> io-risk-score.txt
+          echo "Data Class Score - $(jq -r '.riskScoreCard.dataClassScore' io-presciption.json)" >> io-risk-score.txt
+          echo "Access Score - $(jq -r '.riskScoreCard.accessScore' io-presciption.json)" >> io-risk-score.txt
+          echo "Open Vulnerability Score - $(jq -r '.riskScoreCard.openVulnScore' io-presciption.json)" >> io-risk-score.txt
+          echo "Change Significance Score - $(jq -r '.riskScoreCard.changeSignificanceScore' io-presciption.json)" >> io-risk-score.txt
+          export bizScore=$(jq -r '.riskScoreCard.bizCriticalityScore' io-presciption.json | cut -d'/' -f2) 
+          export dataScore=$(jq -r '.riskScoreCard.dataClassScore' io-presciption.json | cut -d'/' -f2)
+          export accessScore=$(jq -r '.riskScoreCard.accessScore' io-presciption.json | cut -d'/' -f2)
+          export vulnScore=$(jq -r '.riskScoreCard.openVulnScore' io-presciption.json | cut -d'/' -f2)
+          export changeScore=$(jq -r '.riskScoreCard.changeSignificanceScore' io-presciption.json | cut -d'/' -f2)
           echo -n "Total Score - " >> io-risk-score.txt && echo "$bizScore + $dataScore + $accessScore + $vulnScore + $changeScore" | bc >> io-risk-score.txt
         '''
         sh 'cat io-risk-score.txt'
         sh '''
-          echo "IS_SAST_ENABLED = $(jq -r '.security.activities.sast.enabled' result.json)" > io-prescription.txt
-          echo "IS_SCA_ENABLED = $(jq -r '.security.activities.sca.enabled' result.json)" >> io-prescription.txt
-          echo "IS_DAST_ENABLED = $(jq -r '.security.activities.dast.enabled' result.json)" >> io-prescription.txt
-          echo "IS_IMAGE_SCAN_ENABLED = $(jq -r '.security.activities.imageScan.enabled' result.json)" >> io-prescription.txt
-          echo "IS_CODE_REVIEW_ENABLED = $(jq -r '.security.activities.sastplusm.enabled' result.json)" >> io-prescription.txt
-          echo "IS_PEN_TESTING_ENABLED = $(jq -r '.security.activities.dastplusm.enabled' result.json)" >> io-prescription.txt
+          echo "IS_SAST_ENABLED = $(jq -r '.security.activities.sast.enabled' io-presciption.json)" > io-prescription.txt
+          echo "IS_SCA_ENABLED = $(jq -r '.security.activities.sca.enabled' io-presciption.json)" >> io-prescription.txt
+          echo "IS_DAST_ENABLED = $(jq -r '.security.activities.dast.enabled' io-presciption.json)" >> io-prescription.txt
+          echo "IS_IMAGE_SCAN_ENABLED = $(jq -r '.security.activities.imageScan.enabled' io-presciption.json)" >> io-prescription.txt
+          echo "IS_CODE_REVIEW_ENABLED = $(jq -r '.security.activities.sastplusm.enabled' io-presciption.json)" >> io-prescription.txt
+          echo "IS_PEN_TESTING_ENABLED = $(jq -r '.security.activities.dastplusm.enabled' io-presciption.json)" >> io-prescription.txt
         '''
         sh 'cat io-prescription.txt'
       }
@@ -93,7 +94,7 @@ pipeline {
       steps {
         echo "Stage - Coverity on Polaris"
         sh '''
-          #IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
+          #IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' io-presciption.json)
           echo "IS_SAST_ENABLED = ${IS_SAST_ENABLED}"
           if [ ${IS_SAST_ENABLED} = "true" ]; then
             echo "Running Coverity on Polaris based on IO Precription"
@@ -112,7 +113,7 @@ pipeline {
       steps {
         echo "Stage - Blackduck"
         sh '''
-          #IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
+          #IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' io-presciption.json)
           echo "IS_SCA_ENABLED = ${IS_SCA_ENABLED}"
           if [ ${IS_SCA_ENABLED} = "true" ]; then
             echo "Running Blackduck based on IO Precription"
@@ -129,8 +130,8 @@ pipeline {
       steps {
         echo "Preparing to run IO Workflow Engine"
         sh '''
-          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' result.json)
-          IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' result.json)
+          IS_SAST_ENABLED=$(jq -r '.security.activities.sast.enabled' io-presciption.json)
+          IS_SCA_ENABLED=$(jq -r '.security.activities.sca.enabled' io-presciption.json)
           ./prescription.sh \
           --stage="WORKFLOW" \
           --persona="devsecops" \
@@ -168,7 +169,7 @@ pipeline {
         echo "Check for Scheduling of Manual Actviities"
         echo "Manual Code Review"
         sh '''
-          IS_CODE_REVIEW_ENABLED=$(jq -r '.security.activities.sastplusm.enabled' result.json)
+          IS_CODE_REVIEW_ENABLED=$(jq -r '.security.activities.sastplusm.enabled' io-presciption.json)
           echo "IS_CODE_REVIEW_ENABLED = ${IS_CODE_REVIEW_ENABLED}"
           if [ ${IS_CODE_REVIEW_ENABLED} = "true" ]; then
             echo "Sending Notification for Manual Code Review based on IO Precription"
@@ -179,7 +180,7 @@ pipeline {
           '''
         echo "Manual Penetration Testing"
         sh '''
-          IS_PEN_TESTING_ENABLED=$(jq -r '.security.activities.dastplusm.enabled' result.json)
+          IS_PEN_TESTING_ENABLED=$(jq -r '.security.activities.dastplusm.enabled' io-presciption.json)
           echo "IS_PEN_TESTING_ENABLED = ${IS_PEN_TESTING_ENABLED}"
           if [ ${IS_PEN_TESTING_ENABLED} = "true" ]; then
             echo "Sending Notification for Manual Penetration Testing based on IO Precription"
