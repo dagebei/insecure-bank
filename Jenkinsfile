@@ -169,7 +169,7 @@ pipeline {
     stage('Break the Build') {
       steps {
         echo "add Build Breaker parts here"
-        sh 'echo "Breaker Status - $(jq -r '.breaker.status' wf-output.json)'
+        sh 'echo "Breaker Status - $(jq -r '.breaker.status' wf-output.json)"'
       }
     }
     stage('Clean Workspace') {
