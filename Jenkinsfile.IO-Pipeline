@@ -37,12 +37,9 @@ pipeline {
           --io.url="${IO_URL}" \
           --io.token="${IO_ACCESS_TOKEN}" \
           --manifest.type="json" \
-          --asset.id="insecure-bank" \
+          --project.name="insecure-bank" \
           --workflow.url="${WORKFLOW_URL}" \
           --workflow.version="${WORKFLOW_CLIENT_VERSION}" \
-          --file.change.threshold="10" \
-          --sast.rescan.threshold="20" \
-          --sca.rescan.threshold="20" \
           --scm.type="github" \
           --scm.owner="dagebei" \
           --scm.repo.name="insecure-bank" \
@@ -138,12 +135,9 @@ pipeline {
           --io.url="${IO_URL}" \
           --io.token="${IO_ACCESS_TOKEN}" \
           --manifest.type="json" \
-          --asset.id="insecure-bank" \
+          --project.name="insecure-bank" \
           --workflow.url="${WORKFLOW_URL}" \
           --workflow.version="${WORKFLOW_CLIENT_VERSION}" \
-          --file.change.threshold="10" \
-          --sast.rescan.threshold="20" \
-          --sca.rescan.threshold="20" \
           --polaris.project.name="${IO_POC_PROJECT_NAME}" \
           --polaris.url="${POLARIS_SERVER_URL}" \
           --polaris.token="${POLARIS_ACCESS_TOKEN}" \
