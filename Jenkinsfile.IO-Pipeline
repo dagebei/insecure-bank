@@ -155,7 +155,7 @@ pipeline {
         '''
         echo "Running IO Workflow Engine with CodeDx"
         sh '''
-          java -jar WorkflowClient.jar --workflowengine.url="http://52.186.143.163/api/workflowengine/" --io.manifest.path=synopsys-io.json
+          java -jar WorkflowClient.jar --workflowengine.url="${WORKFLOW_URL}" --io.manifest.path=synopsys-io.json
         '''
       }
     }
