@@ -42,10 +42,10 @@ pipeline {
           --workflow.url="${WORKFLOW_URL}" \
           --workflow.version="${WORKFLOW_CLIENT_VERSION}" \
           --scm.type="github" \
-          --scm.owner="dagebei" \
-          --scm.repo.name="insecure-bank" \
+          --scm.owner="sigiodemo" \
+          --scm.repo.name="IO-POC-insecure-bank" \
           --scm.branch.name="main" \
-          --github.username="dagebei" \
+          --github.username="sigiodemo" \
           --github.token="${GTIHUB_ACCESS_TOKEN}" \
           --polaris.project.name="${IO_POC_PROJECT_NAME}" \
           --polaris.url="${POLARIS_SERVER_URL}" \
