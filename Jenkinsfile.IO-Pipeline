@@ -9,7 +9,7 @@ pipeline {
     IO_ACCESS_TOKEN = credentials('IO-AUTH-TOKEN')
     GTIHUB_ACCESS_TOKEN = credentials('Github-AuthToken')
     CODEDX_ACCESS_TOKEN = credentials('CODEDX_API_KEY')
-    CODEDX_PROJECT_ID = 2
+    CODEDX_PROJECT_ID = 5
     IS_SAST_ENABLED = "false"
     IS_SCA_ENABLED = "false"
     IS_DAST_ENABLED = "false"
